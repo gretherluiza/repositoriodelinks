@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repositório de Links</title>
+    <!-- Inclui Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inclui as novas fontes Poppins, Lato e Oswald do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Variáveis de tema para o design padrão (tema escuro) */
+        :root {
+            --bg-color: #27292a; /* Fundo cinza escuro */
+            --main-container-bg: #2f3032; /* Cor para as caixas */
+            --text-color: #f8fafc; /* Branco-azulado */
+            --input-bg: #2f3032; /* Cor para os inputs */
+            --input-text-color: #cbd5e1; /* Cinza-azulado */
+            --button-bg: #9b59b6; /* Roxo */
+            --button-hover-bg: #8e44ad; /* Roxo mais escuro */
+            --border-color: #434446; /* Cinza escuro */
+            --card-bg: #2f3032;
+            --card-hover-shadow: 0 10px 20px rgba(155, 89, 182, 0.3);
+            --header-color: #f8fafc; /* Branco-azulado para a primeira linha do título */
+        }
+
+        /* Variáveis para o tema claro */
+        .light-theme {
+            --bg-color: #f0f4f8;
+            --main-container-bg: #ffffff;
+            --text-color: #1e293b;
+            --input-bg: #e2e8f0;
+            --input-text-color: #475569;
+            --button-bg: #9b59b6;
+            --button-hover-bg: #8e44ad;
+            --border-color: #cbd5e1;
+            --card-bg: #ffffff;
+            --card-hover-shadow: 0 10px 20px rgba(155, 89, 182, 0.3);
+            --header-color: #475569;
+        }
+
+        /* Estilos base do corpo usando as novas variáveis */
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Novo estilo para o título do Gerador de Telas OBS */
+        .page-title {
+            font-family: 'Oswald', 'Poppins', sans-serif;
+            font-weight: 700;
+            text-align: center;
+            width: auto;
+            margin: 0;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        
+        .title-line-1 {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            color: var(--header-color);
+        }
+
+        .title-line-2 {
+            font-size: clamp(2rem, 6vw, 4.5rem);
+            color: var(--button-bg);
+            letter-spacing: -2px;
+        }
+
+        /* Estilos para o contêiner principal */
+        .main-container {
+            background-color: var(--main-container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
+        }
+        
+        .glow-shadow {
+            box-shadow: 0 0 15px rgba(155, 89, 182, 0.5);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        
+        .glow-shadow:hover {
+            box-shadow: 0 0 25px rgba(155, 89, 182, 0.8);
+        }
+
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            opacity: 1;
+        }
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+        
+        /* Estilo para os botões de categoria */
+        .category-item {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px; /* rounded-full */
+            transition: background-color 0.2s, color 0.2s, transform 0.2s;
+            white-space: nowrap;
+        }
+        .category-item.active {
+            background-color: var(--button-bg);
+            color: white;
+            font-weight: 600;
+        }
+        .category-item:not(.active):hover {
+            background-color: var(--border-color);
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para o carrossel de categorias */
+        .category-carousel {
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+        .category-carousel::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        .card-link {
+            background-color: var(--card-bg);
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+        }
+        .card-link:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        /* Estilos para os botões do seletor de tema */
+        .theme-switcher-btn {
+            background-color: var(--main-container-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        .theme-switcher-btn:hover {
+            transform: scale(1.05);
+            background-color: var(--border-color);
+        }
+        /* Estilo para o botão de tema ativo */
+        .active-theme-btn {
+            background-color: var(--button-bg);
+            color: white;
+            box-shadow: 0 0 10px var(--button-bg), 0 0 20px var(--button-bg);
+            transform: scale(1.1);
+        }
+        .active-theme-btn:hover {
+            background-color: var(--button-hover-bg);
+            transform: scale(1.15);
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col items-center min-h-screen p-4 md:p-8">
+    <!-- Seletor de Tema (Theme Switcher) -->
+    <div id="themeSwitcher" class="fixed top-4 right-4 z-10 flex space-x-2">
+        <button id="light-theme-btn" class="theme-switcher-btn p-2 rounded-lg shadow-md">Claro</button>
+        <button id="dark-theme-btn" class="theme-switcher-btn p-2 rounded-lg shadow-md">Escuro</button>
+        <button id="system-theme-btn" class="theme-switcher-btn p-2 rounded-lg shadow-md">Sistema</button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-message" class="toast"></div>
+
+    <div class="container mx-auto max-w-7xl">
+        <!-- Main Page Section -->
+        <section id="main-page">
+            <header class="text-center mb-10 mt-8">
+                <h1 class="page-title mb-2">
+                    <span class="title-line-1 block">Media Training</span>
+                    <span class="title-line-2 block">Repositório de Links</span>
+                </h1>
+            </header>
+
+            <!-- Search and Filters -->
+            <div class="main-container p-6 mb-8 mt-8">
+                <input type="text" id="search-input" placeholder="Pesquisar por título ou descrição..." class="w-full px-4 py-3 rounded-lg border border-[var(--border-color)] bg-[var(--input-bg)] text-[var(--input-text-color)] focus:outline-none focus:ring-2 focus:ring-[var(--button-bg)] transition duration-200" style="background-color: var(--input-bg); color: var(--input-text-color); border-color: var(--border-color);">
+            </div>
+
+            <!-- Categories -->
+            <div id="category-carousel" class="flex overflow-x-auto gap-4 py-4 mb-8 category-carousel">
+                <!-- As categorias serão renderizadas aqui pelo JS -->
+            </div>
+
+            <!-- Links Grid -->
+            <main id="links-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Links will be rendered here by JS -->
+            </main>
+        </section>
+
+        <footer id="footer" class="text-center text-sm text-gray-500 mt-10">
+            <!-- Footer content -->
+        </footer>
+    </div>
+
+    <script>
+        // Dados dos links, agora estáticos no próprio arquivo HTML
+        const linksData = [
+            {
+                title: "Gemini",
+                url: "https://gemini.google.com/",
+                description: "O assistente de IA da Google, pronto para ajudar com criatividade, redação e informações.",
+                category: ["IA's"],
+                image: "https://placehold.co/400x250/9b59b6/f8fafc?text=Gemini"
+            },
+            {
+                title: "Perplexity AI",
+                url: "https://www.perplexity.ai/",
+                description: "Um motor de busca conversacional que fornece respostas diretas e citações de fontes.",
+                category: ["IA's"],
+                image: "https://placehold.co/400x250/8e44ad/f8fafc?text=Perplexity"
+            },
+            {
+                title: "ChatGPT",
+                url: "https://chatgpt.com/",
+                description: "Um modelo de linguagem da OpenAI que interage de forma conversacional para uma ampla gama de tarefas.",
+                category: ["IA's"],
+                image: "https://placehold.co/400x250/6c3483/f8fafc?text=ChatGPT"
+            },
+            {
+                title: "Image Upscaler",
+                url: "https://imgupscaler.com/",
+                description: "Ferramenta online para aumentar a resolução de imagens e fotos sem perder a qualidade.",
+                category: ["Melhorar Imagem", "Design"],
+                image: "https://placehold.co/400x250/9b59b6/f8fafc?text=Image+Upscaler"
+            },
+            {
+                title: "Upscale.media",
+                url: "https://www.upscale.media/",
+                description: "Melhore a qualidade e a resolução de suas fotos online e gratuitamente com IA.",
+                category: ["Melhorar Imagem", "Design"],
+                image: "https://placehold.co/400x250/8e44ad/f8fafc?text=Upscale.media"
+            },
+            {
+                title: "Pixelcut AI",
+                url: "https://www.pixelcut.ai/pt-br/melhorar-qualidade-da-foto",
+                description: "Use inteligência artificial para melhorar a qualidade e remover o fundo das suas fotos.",
+                category: ["Melhorar Imagem", "Design"],
+                image: "https://placehold.co/400x250/6c3483/f8fafc?text=Pixelcut+AI"
+            },
+            {
+                title: "Cronômetro",
+                url: "https://www.oigoaudio.com/cronometro/",
+                description: "Um cronômetro online simples e eficaz para calcular o tempo de locução dos roteiros e textos",
+                category: ["Utilitário"],
+                image: "https://placehold.co/400x250/9b59b6/f8fafc?text=Cronômetro"
+            },
+            {
+                title: "Adobe Express",
+                url: "https://new.express.adobe.com/",
+                description: "Ferramenta de design gráfico e edição de vídeo do Adobe, com recursos fáceis e rápidos.",
+                category: ["Design", "Editor de Imagem"],
+                image: "https://placehold.co/400x250/8e44ad/f8fafc?text=Adobe+Express"
+            },
+            {
+                title: "Google AI Studio",
+                url: "https://aistudio.google.com/u/0/apps/bundled/pixshop?showPreview=true&showAssistant=true",
+                description: "Ferramentas de IA para criadores de conteúdo e desenvolvedores, incluindo o Pixshop para edição de imagem.",
+                category: ["Design", "Editor de Imagem"],
+                image: "https://placehold.co/400x250/6c3483/f8fafc?text=Google+AI+Studio"
+            },
+            {
+                title: "YouTube Thumbnail Grabber",
+                url: "https://youtube-thumbnail-grabber.com/",
+                description: "Ferramenta para baixar miniaturas de vídeos do YouTube em alta resolução.",
+                category: ["Design", "Utilitário"],
+                image: "https://placehold.co/400x250/8e44ad/f8fafc?text=YouTube+Thumbnail"
+            },
+            {
+                title: "SaveClip",
+                url: "https://saveclip.app/pt",
+                description: "Ferramenta para salvar conteúdo da web, como vídeos e áudios, para uso offline.",
+                category: ["Design", "Utilitário"],
+                image: "https://placehold.co/400x250/9b59b6/f8fafc?text=SaveClip"
+            },
+            {
+                title: "Watermark Remover",
+                url: "https://www.watermarkremover.io/pt",
+                description: "Remova marcas d'água de imagens de forma automática usando inteligência artificial.",
+                category: ["Design", "Utilitário"],
+                image: "https://placehold.co/400x250/6c3483/f8fafc?text=Watermark+Remover"
+            },
+            {
+                title: "Bancos de Imagens",
+                url: "https://bit.ly/bancosimagens",
+                description: "Coleção de sites para encontrar e baixar imagens de alta qualidade.",
+                category: ["Design", "Banco de Imagens"],
+                image: "https://placehold.co/400x250/9b59b6/f8fafc?text=Bancos+de+Imagens"
+            },
+            {
+                title: "MP4 para GIF (Adobe Express)",
+                url: "https://www.adobe.com/br/express/feature/video/convert/mp4-to-gif",
+                description: "Converte vídeos MP4 em GIFs animados de forma rápida e online.",
+                category: ["Design", "Utilitário"],
+                image: "https://placehold.co/400x250/8e44ad/f8fafc?text=MP4+para+GIF"
+            },
+            {
+                title: "Dicas de Prompt",
+                url: "https://gfdqwszo.manus.space/",
+                description: "Ferramenta com compilado de dicas para criação de prompts",
+                category: ["IA's", "Utilitário"],
+                image: "https://placehold.co/400x250/6c3483/f8fafc?text=Prompt"
+            }
+        ];
+
+        let allLinks = [...linksData]; // A cópia dos links originais
+        let activeCategory = 'Todos';
+
+        // Referências aos elementos da interface
+        const linksContainer = document.getElementById('links-container');
+        const searchInput = document.getElementById('search-input');
+        const categoryCarousel = document.getElementById('category-carousel');
+        const lightThemeBtn = document.getElementById('light-theme-btn');
+        const darkThemeBtn = document.getElementById('dark-theme-btn');
+        const systemThemeBtn = document.getElementById('system-theme-btn');
+
+        /**
+         * Renderiza a lista de categorias no carrossel.
+         * @param {Array} categories - Array de categorias únicas.
+         */
+        function renderCategoryFilters(categories) {
+            categoryCarousel.innerHTML = '';
+            
+            // Adiciona a opção "Todos" no topo
+            const allItem = document.createElement('div');
+            allItem.textContent = 'Todos';
+            allItem.className = 'category-item bg-[var(--border-color)] hover:bg-[var(--border-color)]';
+            if (activeCategory === 'Todos') {
+                allItem.classList.add('active');
+            }
+            allItem.addEventListener('click', () => {
+                activeCategory = 'Todos';
+                renderCategoryFilters(categories);
+                filterAndRenderLinks();
+            });
+            categoryCarousel.appendChild(allItem);
+
+            // Adiciona as demais categorias
+            categories.forEach(category => {
+                const item = document.createElement('div');
+                item.textContent = category;
+                item.className = 'category-item bg-[var(--border-color)] hover:bg-[var(--border-color)]';
+                if (activeCategory === category) {
+                    item.classList.add('active');
+                }
+                item.addEventListener('click', () => {
+                    activeCategory = category;
+                    renderCategoryFilters(categories);
+                    filterAndRenderLinks();
+                });
+                categoryCarousel.appendChild(item);
+            });
+        }
+
+        /**
+         * Renderiza os cards dos links na página.
+         * @param {Array} filteredLinks - O array de links a ser renderizado.
+         */
+        function renderLinks(filteredLinks) {
+            linksContainer.innerHTML = '';
+            if (filteredLinks.length === 0) {
+                linksContainer.innerHTML = `
+                    <p class="text-center text-gray-500 text-lg col-span-full mt-12">
+                        Nenhum link encontrado. Tente uma nova pesquisa ou filtro.
+                    </p>
+                `;
+                return;
+            }
+
+            filteredLinks.forEach(link => {
+                const linkCard = document.createElement('a');
+                linkCard.href = link.url;
+                linkCard.target = '_blank';
+                linkCard.rel = 'noopener noreferrer';
+                linkCard.className = `
+                    card-link main-container rounded-2xl overflow-hidden
+                    transform hover:scale-105
+                `;
+
+                // URL base64 de uma imagem SVG de ícone de link genérico
+                const defaultImageUrl = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMjUwIiB2aWV3Qm94PSIwIDAgMjQwMCAxNTAwIiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojMmYzMDMyOyBib3JkZXItcmFkaXVzOjI0cHg7Ij4KICA8ZyBmaWxsPSJub25lIj4KICAgIDxyZWN0IHdpZHRoPSIyNDA0IiBoZWlnaHQ9IjE1MDQiIGZpbGw9IiMyZjMwMzIiLz4KICAgIDxjaXJjbGUgc3R5bGU9Im92ZXJmbG93Om5vbmU7IiBmaWxsPSIjOWI1OWI2IiBzdHJva2U9Im5vbmUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI0OS42NTM2LDcwMy4yNTE5KWRlZzgwIiBjeD0iNjAwIiBjeT0iNzUwIiByPSIxMDAiLz4KICAgIDxjaXJjbGUgc3R5bGU9Im92ZXJmbG93Om5vbmU7IiBmaWxsPSIjOWI1OWI2IiBzdHJva2U9Im5vbmUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI0OS42NTM2LDU5MS4yNTE5KWRlZzgwIiBjeD0iNjAwIiBjeT0iNzUwIiByPSIxMDAiLz4KICA8L2c+Cjwvc3ZnPg==';
+                
+                linkCard.innerHTML = `
+                    <div class="h-40 overflow-hidden">
+                        <img src="${link.image || defaultImageUrl}" alt="Capa de ${link.title}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-semibold text-[var(--text-color)] mb-2">${link.title}</h3>
+                        <p class="text-[var(--input-text-color)] text-sm">${link.description}</p>
+                        <div class="mt-4">
+                            ${link.category.map(cat => `
+                                <span class="inline-block bg-[var(--button-bg)] text-white text-xs font-bold px-3 py-1 rounded-full mr-2">
+                                    ${cat}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                linksContainer.appendChild(linkCard);
+            });
+        }
+
+        /**
+         * Filtra os links com base na categoria ativa e no valor da busca.
+         */
+        function filterAndRenderLinks() {
+            const searchQuery = searchInput.value.toLowerCase();
+            const filteredLinks = allLinks.filter(link => {
+                const matchesCategory = activeCategory === 'Todos' || link.category.includes(activeCategory);
+                const matchesSearch = (link.title && link.title.toLowerCase().includes(searchQuery)) || 
+                                      (link.description && link.description.toLowerCase().includes(searchQuery));
+                return matchesCategory && matchesSearch;
+            });
+            renderLinks(filteredLinks);
+        }
+
+        // Listener para a barra de busca
+        searchInput.addEventListener('input', filterAndRenderLinks);
+
+        /**
+         * Atualiza o estado visual dos botões de tema.
+         * @param {string} activeTheme - O nome do tema ativo ('light', 'dark' ou 'system').
+         */
+        function updateActiveThemeButton(activeTheme) {
+            const buttons = document.querySelectorAll('.theme-switcher-btn');
+            buttons.forEach(btn => btn.classList.remove('active-theme-btn'));
+            
+            if (activeTheme === 'light') {
+                lightThemeBtn.classList.add('active-theme-btn');
+            } else if (activeTheme === 'dark') {
+                darkThemeBtn.classList.add('active-theme-btn');
+            } else if (activeTheme === 'system') {
+                systemThemeBtn.classList.add('active-theme-btn');
+            }
+        }
+
+        /**
+         * Aplica o tema selecionado à página e salva a preferência.
+         * @param {string} theme - O nome do tema ('light', 'dark' ou 'system').
+         */
+        function applyTheme(theme) {
+            const root = document.documentElement;
+            localStorage.setItem('theme', theme);
+            
+            root.classList.remove('light-theme');
+            
+            if (theme === 'light' || (theme === 'system' && !window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                root.classList.add('light-theme');
+            }
+            updateActiveThemeButton(theme);
+        }
+
+        // Adiciona event listeners aos botões de tema
+        lightThemeBtn.addEventListener('click', () => applyTheme('light'));
+        darkThemeBtn.addEventListener('click', () => applyTheme('dark'));
+        systemThemeBtn.addEventListener('click', () => applyTheme('system'));
+
+        // Listener para mudanças no tema do sistema
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'system') {
+                applyTheme('system');
+            }
+        });
+
+        // Inicializa o site
+        window.onload = function() {
+            // Aplica o tema salvo no localStorage ou o tema do sistema
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            } else {
+                applyTheme('system');
+            }
+
+            const allCategoriesFlat = allLinks.flatMap(link => link.category);
+            const uniqueCategories = [...new Set(allCategoriesFlat)].sort();
+            renderCategoryFilters(uniqueCategories);
+            filterAndRenderLinks();
+        };
+    </script>
+</body>
+</html>
